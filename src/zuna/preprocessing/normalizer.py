@@ -223,10 +223,22 @@ class Normalizer:
             stds = np.array(norm_params['stds'])
             n_ep = min(means.shape[0], data_reconstructed.shape[0])
             n_ch = min(means.shape[1], data_reconstructed.shape[1])
+            # Denormalize channels that were normalized (std > 0)
+            good_mask = stds[:n_ep, :n_ch] > 0  # (n_ep, n_ch)
             data_reconstructed[:n_ep, :n_ch, :] = (
                 data_reconstructed[:n_ep, :n_ch, :] * stds[:n_ep, :n_ch, np.newaxis]
                 + means[:n_ep, :n_ch, np.newaxis]
             )
+            # Scale infilled channels (std was 0) by average std of good channels,
+            # so they have comparable magnitude to the real channels
+            for i in range(n_ep):
+                good_stds = stds[i, :n_ch][good_mask[i]]
+                if len(good_stds) > 0:
+                    avg_std = good_stds.mean()
+                    bad_chs = ~good_mask[i]
+                    data_reconstructed[i, :n_ch, :][bad_chs] = (
+                        data[i, :n_ch, :][bad_chs] * avg_std
+                    )
         elif 'global_mean' in norm_params and 'global_std' in norm_params:
             # Raw path: scalar denormalization
             data_reconstructed = data_reconstructed * norm_params['global_std'] + norm_params['global_mean']

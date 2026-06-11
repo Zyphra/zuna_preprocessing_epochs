@@ -27,8 +27,11 @@ from zuna import preprocessing, inference, pt_to_fif, compare_plot_pipeline
 # =============================================================================
 
 TUTORIAL_DIR = Path(__file__).parent.resolve()
-INPUT_DIR = str(TUTORIAL_DIR / "data" / "1_fif_input")  ### original: raw .fif input
-WORKING_DIR = str(TUTORIAL_DIR / "data" / "working")    ### replace with your path
+# INPUT_DIR = str(TUTORIAL_DIR / "data" / "1_fif_input")  ### original: raw .fif input
+# WORKING_DIR = str(TUTORIAL_DIR / "data" / "working")    ### replace with your path
+
+INPUT_DIR = "/data/datasets/bci/torcheeg_mne/FACED"
+WORKING_DIR = "/data/home/jonas/workspace/bci/classifier_evals/zuna_output/faced_15even"
 
 # Derived paths (pipeline directory structure)
 WORKING_PATH = Path(WORKING_DIR)
@@ -49,11 +52,14 @@ APPLY_HIGHPASS_FILTER = True       # 0.5 Hz highpass filter
 APPLY_AVERAGE_REFERENCE = True     # Average reference
 
 # Channel options
-# TARGET_CHANNEL_COUNT = None   # No upsampling (keep original channels)
-TARGET_CHANNEL_COUNT = 40     # Upsample to N channels (greedy selection)
+TARGET_CHANNEL_COUNT = None   # No upsampling (keep original channels)
+# TARGET_CHANNEL_COUNT = 40     # Upsample to N channels (greedy selection)
 # TARGET_CHANNEL_COUNT = ['AF3', 'AF4', 'F1', 'F2', 'FC1', 'FC2', 'CP1', 'CP2', 'PO3', 'PO4']
 
-BAD_CHANNELS = ["Fz", "Cz", "Pz"]
+BAD_CHANNELS = ['Fp2', 'F3', 'F7', 'FC1', 'FC5', 'Cz', 'C4', 'T8', 'CP2', 'CP5', 'Pz', 'P4', 'P8', 'PO4', 'O2']
+# BAD_CHANNELS = ['Fp2', 'Fz', 'F3', 'F7', 'F8', 'FC1', 'FC5', 'FC6', 'C3', 'C4', 'T8', 'CP1', 'CP2', 'CP6', 'Pz', 'P4', 'P7', 'P8', 'PO4', 'Oz', 'O1', 'O2']
+# BAD_CHANNELS = ['F7', 'F8', 'FC1', 'FC2', 'FC5', 'FC6', 'Cz', 'C3', 'C4', 'T7', 'T8', 'CP1', 'CP2', 'CP5', 'CP6', 'Pz', 'P3', 'P4', 'P7', 'P8', 'PO3', 'PO4', 'Oz', 'O1', 'O2']
+
 
 # Artifact removal (disabled by default)
 DROP_BAD_CHANNELS = False       # Detect and remove bad channels
